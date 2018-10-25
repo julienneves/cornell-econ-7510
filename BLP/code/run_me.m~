@@ -10,9 +10,9 @@ cd(folder);
 cd('..');
 addpath(genpath(cd));
 
-
-%% Prepare data
 prepare_data
+
+%% Load data
 
 load Dataset
 params.number_product = size(Dataset.data,1);
@@ -83,32 +83,28 @@ Dataset.Xs_hat = Dataset.IV* Dataset.W * Dataset.IV' * Dataset.Xs ;
 %% Logit
 
 params.model = 'logit';
-params.IV_type = 'BLP';
 
 Dataset.Xd = [ones(params.nb_cars,1) prod_char  firm_dummy(:,2:end) -Dataset.data.price];
 
 Dataset = create_iv(Dataset, params);
 
 Dataset.W = inv(Dataset.IV'*Dataset.IV);
-Dataset.Xd_hat = Dataset.Xd ;
+Dataset.Xd_hat = Dataset.IV* Dataset.W * Dataset.IV' * Dataset.Xd ;
 
 
-[est, Dataset] = logit_model(Dataset, params);
+Dataset.mean_utility = get_mean_utility(Dataset, params);
+[beta,ci,xi,~,stats] = regress(Dataset.mean_utility,Dataset.Xd_hat);
 
-result.logit = est;
+result.logit = 
+
+save output/result.mat
 
 %% BLP
 params.model = 'BLP';
-params.IV_type = 'BLP';
 params.nb_draws = 1000;
 params.income_mean = 35000;
 params.income_sd = 45000;
-
-params.nb_init = 100;
-params.theta_start = 1;
-params.lower_bound = 0;
-params.upper_bound = 100;
-params.nK = size(params.theta_start,1);
+params.nK = 1;
 
 % Draw income from lognormal
 mu = log((params.income_mean^2)/sqrt(params.income_sd^2+params.income_mean^2));
@@ -116,11 +112,56 @@ sigma = sqrt(log(params.income_sd^2/(params.income_mean^2)+1));
 
 Draws.income = lognrnd(mu,sigma,1,params.nb_draws);
 
-% 
-Dataset = create_iv(Dataset, params);
-
 Dataset.Xd = [ones(params.nb_cars,1) prod_char -Dataset.data.price];
-Dataset.Xd_hat = Dataset.Xd;
 
-[est, Dataset] = blp_model(Dataset, params, Draws);
-result.blp = est;
+Dataset = create_iv(Dataset, params);
+Dataset.Xd_hat = Dataset.IV* Dataset.W * Dataset.IV' * Dataset.Xd ;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Step 1: Estimation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%================  1.1: Matrix of Theta ==========================
+%theta=[alpha; sigma_p; lambda]
+params.nb_init = 100;
+
+% Set particular inital values
+theta_start = 1;
+
+% Set bounds
+lower_bound = 0;
+upper_bound = 100;
+
+theta_init = linspace(lower_bound,upper_bound, params.nb_init);
+
+% Combine inital value and random grid points
+theta_init=[theta_start, theta_init];
+
+
+%================  1.2. Optimal GMM ==========================
+options = optimoptions('fmincon','Display','iter', ...
+        'SpecifyObjectiveGradient',false,'CheckGradients',false, ...
+        'FiniteDifferenceType', 'central', ...
+        'FiniteDifferenceStepSize', 1e-10,'StepTolerance',1e-10, ...
+        'MaxFunEval', inf, 'MaxIter', inf);
+    
+%%%%%%% Find estimates using different initial values
+theta_mat = zeros(params.nb_init, params.nK);
+
+for i=1:params.nb_init
+    % Estimation
+    theta_mat(i) = fmincon('gmm_fun', theta_init(i), [], [], [], [], ...
+                            lower_bound, upper_bound, [], options, ...
+                            Dataset, params, Draws);
+                        
+    [objective_val, est] = gmm_fun(theta_mat(i), Dataset, params, Draws);
+    result.blp{i}.start = theta_init(i);
+    result.blp{i}.theta = theta_mat(i);
+    result.blp{i}.beta = est.beta;
+    result.blp{i}.ci = est.ci;
+    result.blp{i}.stats = est.stats;
+end
+
+
+

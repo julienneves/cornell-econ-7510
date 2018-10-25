@@ -33,7 +33,7 @@ switch model
     case 'logit'
         shares = Dataset.shares;
         price = Dataset.data.price;
-        alpha = result.alpha;
+        alpha = result.beta(end);
         
         delta = alpha*(shares./shares'-diag(shares));
         e = delta.*(price'./shares);

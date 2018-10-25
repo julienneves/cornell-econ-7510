@@ -3,12 +3,12 @@ function [objective_val, est] = gmm_fun(theta, Dataset, params, Draws)
 %   Detailed explanation goes here
 
 IV = Dataset.IV;
-Xd = Dataset.Xd;
+Xd_hat = Dataset.Xd_hat;
 W = Dataset.W;
 
 mean_utility = get_mean_utility(Dataset, params, Draws, theta);
 
-[beta,ci,xi,~,stats] = regress(mean_utility,Xd);
+[beta,ci,xi,~,stats] = regress(mean_utility,Xd_hat);
 est.beta = beta;
 est.ci = ci;
 est.stats = stats;
