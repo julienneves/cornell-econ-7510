@@ -47,7 +47,7 @@ switch specification
         result.supply.markup = b;
         result.supply.elasticities = e;
         result.supply.wi = wi;
-        result.supply.beta = gamma;
+        result.supply.gamma = gamma;
         result.supply.ci = ci_s;
         result.supply.stats = stats_s;
  

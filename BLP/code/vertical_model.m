@@ -6,7 +6,6 @@ specification = params.specification;
 
 shares = Dataset.shares;
 price = Dataset.data.price;
-Xd = Dataset.Xd;
 
 % Add outside option price and share
 shares = [1-sum(shares); shares];
@@ -22,6 +21,8 @@ mean_utility = cumsum(mean_utility);
 switch specification
     case 'demand'
         % OLS of mean_utility
+        
+        Xd = Dataset.Xd;
         [beta,ci,xi,~,stats] = regress(mean_utility,Xd);
         
         [b, e] = get_markup(Dataset, params);
@@ -54,7 +55,7 @@ switch specification
         result.supply.markup = b;
         result.supply.elasticities = e;
         result.supply.wi = wi;
-        result.supply.beta = gamma;
+        result.supply.gamma = gamma;
         result.supply.ci = ci_s;
         result.supply.stats = stats_s;
  
