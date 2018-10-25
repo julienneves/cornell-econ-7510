@@ -13,7 +13,7 @@ switch IV_type
             sum_outside(i,:) = sum(prod_char(firm~=firm(i),:),1);
         end
         sum_within = sum_within-prod_char;
-        Dataset.IV = [X sum_within];
+        Dataset.IV = [X sum_within sum_outside];
     case 'Houde'
         for i = 1:params.nb_cars
             sum_abs(i,:) = sum(abs(prod_char-prod_char(i,:)),1);
@@ -24,7 +24,7 @@ switch IV_type
         warning('No IV type specified');
 end
 
-Dataset.W = inv(Dataset.IV'*Dataset.IV);
+Dataset.W = (Dataset.IV'*Dataset.IV)\eye(size(Dataset.IV,2));
 Dataset.Pz =  Dataset.IV* Dataset.W * Dataset.IV';
 end
 

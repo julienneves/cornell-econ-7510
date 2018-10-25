@@ -32,9 +32,8 @@ Dataset.shares = Dataset.data.quantity/params.M;
 % 
 dummy_firm = dummyvar(Dataset.data.firm);
 prod_char = [Dataset.data.weight Dataset.data.hp Dataset.data.AC];
-Dataset.X = [ones(params.nb_cars,1) prod_char dummy_firm(:,2:end)];
-
-
+%Dataset.X = [ones(params.nb_cars,1) prod_char dummy_firm(:,2:end)];
+ Dataset.X = [ones(params.nb_cars,1) prod_char];
 Dataset = create_iv(Dataset, params);
 
 %% Vertical Model (Question 1)
@@ -110,7 +109,7 @@ params.income_sd = 45000;
 params.nb_init = 100;
 params.theta_start = 1;
 params.lower_bound = 0;
-params.upper_bound = 100;
+params.upper_bound = 40;
 params.nK = size(params.theta_start,1);
 
 % Draw income from lognormal
@@ -120,7 +119,12 @@ sigma = sqrt(log(params.income_sd^2/(params.income_mean^2)+1));
 Draws.income = lognrnd(mu,sigma,1,params.nb_draws);
 
 %
-Dataset.Xd = [Dataset.X -Dataset.Pz*Dataset.data.price];
+Dataset.Xd = [Dataset.X -Dataset.data.price];
 
 [est, Dataset] = blp_model(Dataset, params, Draws);
 result.blp = est;
+
+for i = 1:params.nb_init
+    B(i,:)=est{i}.alpha; 
+end
+hist(B)

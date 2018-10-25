@@ -16,7 +16,7 @@ est.alpha = [beta(end) theta];
 Dataset.mean_utility;
 
 [b,e,~] = get_markup(Dataset, params, est, Draws);
-est.elasticties = e;
+est.elasticities = e;
 
 objective_val = (IV' * xi)'* W * (IV' * xi);
 
