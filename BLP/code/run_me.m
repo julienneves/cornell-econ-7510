@@ -58,26 +58,26 @@ Dataset = create_iv(Dataset, params);
 Dataset.Xd_hat = Dataset.IV* Dataset.W * Dataset.IV' * Dataset.Xd ;
 Dataset.Xs_hat = Dataset.IV* Dataset.W * Dataset.IV' * Dataset.Xs ;
 
-% Competition
-params.specification = 'competition';
-[est, Dataset] = vertical_model(Dataset, params);
-result.vertical.competition = est;
-
-% Single
-params.specification = 'single';
-[est, Dataset] = vertical_model(Dataset, params);
-result.vertical.single = est;
-
-
-% Multiple
-params.specification = 'multiple';
-[est, Dataset] = vertical_model(Dataset, params);
-result.vertical.multiple = est;
-
-% Collusion
-params.specification = 'collusion';
-[est, Dataset] = vertical_model(Dataset, params);
-result.vertical.collusion = est;
+% % Competition
+% params.specification = 'competition';
+% [est, Dataset] = vertical_model(Dataset, params);
+% result.vertical.competition = est;
+% 
+% % Single
+% params.specification = 'single';
+% [est, Dataset] = vertical_model(Dataset, params);
+% result.vertical.single = est;
+% 
+% 
+% % Multiple
+% params.specification = 'multiple';
+% [est, Dataset] = vertical_model(Dataset, params);
+% result.vertical.multiple = est;
+% 
+% % Collusion
+% params.specification = 'collusion';
+% [est, Dataset] = vertical_model(Dataset, params);
+% result.vertical.collusion = est;
 
 
 %% Logit
@@ -93,7 +93,7 @@ Dataset.Xd_hat = Dataset.IV* Dataset.W * Dataset.IV' * Dataset.Xd ;
 
 
 Dataset.mean_utility = get_mean_utility(Dataset, params);
-[beta,ci,xi,~,stats] = regress(Dataset.mean_utility,Dataset.Xdhat);
+[beta,ci,xi,~,stats] = regress(Dataset.mean_utility,Dataset.Xd_hat);
 
 result.logit.beta = beta;
 result.logit.ci = ci;
@@ -112,7 +112,7 @@ params.nK = 1;
 mu = log((params.income_mean^2)/sqrt(params.income_sd^2+params.income_mean^2));
 sigma = sqrt(log(params.income_sd^2/(params.income_mean^2)+1));
 
-Dataset.IV = [ones(params.nb_cars,1) prod_char sum_outside];
+Dataset = create_iv(Dataset, params);
 Dataset.Xd = [ones(params.nb_cars,1) prod_char -Dataset.data.price];
 
 Draws.income = lognrnd(mu,sigma,1,params.nb_draws);
