@@ -13,7 +13,7 @@ switch model
         
         Numerator = exp(mean_utility - theta(1)*price./yi);
         ind_prob = bsxfun(@rdivide, Numerator, 1+sum(Numerator,1));
-        market_share = sum(ind_prob,2);
+        market_share = mean(ind_prob,2) ;
     otherwise
         warning('No model')
 end

@@ -19,33 +19,45 @@ price_diff = diff(price);
 mean_utility = -log(share_cumsum(1:end-1,1)).*price_diff/lambda;
 mean_utility = cumsum(mean_utility);
 
-[b, e] = get_markup(Dataset, params);
-result.markup = b;
-result.elasticities = e;
-
-marginal_cost = Dataset.data.price-b;
 switch specification
-    case 'single'
-        b = (eye(size(delta)).*delta)\shares;
-    case 'multiple'
-        b  = (dummyvar(Dataset.data.firm)*dummyvar(Dataset.data.firm)'.*delta)\shares;
-    case 'collusion'
-        b = (ones(size(delta)).*delta)\shares;
-    case 'competition'
-        b = 0;
-
-        
-    otherwise
+    case 'demand'
         % OLS of mean_utility
         [beta,ci,xi,~,stats] = regress(mean_utility,Xd);
         
-        % Save
-        Dataset.xi = xi;
-        Dataset.mean_utility = mean_utility;
-        result.beta = beta;
-        result.ci = ci;
-        result.stats = stats;
+        [b, e] = get_markup(Dataset, params);
+        result.demand.elasticities = e;
         
+        Dataset.mean_utility = mean_utility;
+        result.demand.elasticities = e;
+        result.demand.xi = xi;
+        result.demand.beta = beta;
+        result.demand.ci = ci;
+        result.demand.stats = stats;
+        
+    otherwise
+        Xd = Dataset.Xd ;
+        Xs = Dataset.Xs ;
+        
+        [beta,ci_d,xi,~,stats_d] = regress(mean_utility,Xd);
+        
+        result.demand.xi = xi;       
+        result.demand.beta = beta;
+        result.demand.ci = ci_d;
+        result.demand.stats = stats_d;
+        
+        [b, e] = get_markup(Dataset, params);
+        
+        marginal_cost = Dataset.data.price-b;
+        
+        [gamma,ci_s,wi,~,stats_s] = regress(marginal_cost,Xs);
+        
+        result.supply.markup = b;
+        result.supply.elasticities = e;
+        result.supply.wi = wi;
+        result.supply.beta = gamma;
+        result.supply.ci = ci_s;
+        result.supply.stats = stats_s;
+ 
 end
 
 end

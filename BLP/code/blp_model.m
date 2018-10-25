@@ -41,12 +41,10 @@ for i=1:params.nb_init
                             Dataset, params, Draws);
                         
     [fval, est] = gmm_fun(theta_mat(i), Dataset, params, Draws);
+    result{i}= est;
     result{i}.start = theta_init(i);
     result{i}.theta = theta_mat(i);
     result{i}.fval = fval;
-    result{i}.beta = est.beta;
-    result{i}.ci = est.ci;
-    result{i}.stats = est.stats;
     clc;
 end
 

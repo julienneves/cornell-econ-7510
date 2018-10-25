@@ -10,17 +10,7 @@ mean_utility = zeros(size(shares));
 
 switch model 
     case 'logit'
-        ite = 0;
-        tol_crit = 1;
-        while tol_crit>tol && ite <= max_ite
-            shares_sim = get_shares(mean_utility, Dataset, params);
-            mean_utility = mean_utility + log(shares) - log(shares_sim);
-            
-            ite = ite + 1;
-            tol_crit = norm(shares-shares_sim);
-            
-            %fprintf('Iteration: %1$d Criteria: %2$e \n', ite,tol_crit)
-        end
+      mean_utility = log(shares)-log(1-sum(shares));
     case 'BLP'
         ite = 0;
         tol_crit = 1;

@@ -1,4 +1,4 @@
-function [b, e,delta] = get_markup(Dataset, params, result, Draws)
+function [b,e,delta] = get_markup(Dataset, params, result, Draws)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -39,28 +39,22 @@ switch model
         price = Dataset.data.price;
         alpha = result.demand.alpha;
         
-        delta = alpha*(shares.*shares'-diag(shares));
+        delta = alpha*(shares./shares'-diag(shares));
         e = delta.*(price'./shares);
-    case 'BLP'
+    case 'blp'
         shares = Dataset.shares;
         price = Dataset.data.price;
-        mean_utility = Dataset.mean_utility;
-        alpha = result.alpha;
+        mean_utility = Dataset.mean_utility
+        alpha = [result.beta(end) result.theta];
         yi = Draws.income;
         
-        Numerator = exp(mean_utility - alpha(2)*price./yi);
+        Numerator = exp(mean_utility - result.alpha(2)*price./yi);
         ind_prob = bsxfun(@rdivide, Numerator, 1+sum(Numerator,1));
-        delta = zeros(size(ind_prob,1));
-        e = zeros(size(ind_prob,1));
+        market_share = sum(ind_prob,2);
         
-        for i = 1:size(yi,2)
-            temp = ind_prob(:,i);
-            D = (alpha(1)+alpha(2)/yi(:,i))*(temp.*temp'-diag(temp));
-            e  = e + D.*(price'./temp);
-            delta = delta + D;
-        end
-        e = e/size(yi,2);
-        delta = delta/size(yi,2);
+        
+        delta = alpha*(shares./shares'-diag(shares));
+        e = delta.*(price'./shares);
 end
 
 switch specification
@@ -71,7 +65,7 @@ switch specification
     case 'collusion'
         b = (ones(size(delta)).*delta)\shares;
     otherwise
-        b = 0;
+        b = 0; 
 end
 
 
