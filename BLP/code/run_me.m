@@ -20,7 +20,7 @@ params.mean_utility_tol = 1e-12;
 params.max_ite = 5000;
 params.M = 100000000;
 params.nb_cars = size(Dataset.data.price,1);
-params.IV_type = 'BLP';
+params.IV_type = 'Houde';
 
 
 % Sort by price
@@ -55,7 +55,7 @@ disp(result.vertical.demand.elasticities);
 %% Question 3
 
 Dataset.Xd = Dataset.X;
-Dataset.Xs = [Dataset.X Dataset.Pz*Dataset.data.quantity];
+Dataset.Xs = [Dataset.X Dataset.data.quantity];
 
 
 % Competition
@@ -85,16 +85,16 @@ result.vertical.collusion = est;
 params.model = 'logit';
 params.specification = 'demand';
 
-Dataset.Xd = [Dataset.X -Dataset.Pz*Dataset.data.price];
-Dataset.Xs = [Dataset.X Dataset.Pz*Dataset.data.quantity];
-
-
+Dataset.Xd = [Dataset.X -Dataset.data.price];
 [est, Dataset] = logit_model(Dataset, params);
 
 result.logit= est;
 
 % Multiple
+
 params.specification = 'multiple';
+Dataset.Xd = [Dataset.X];
+Dataset.Xs = [Dataset.X Dataset.data.quantity];
 [est, Dataset] = logit_model(Dataset, params);
 result.logit.multiple = est;
 
@@ -111,12 +111,6 @@ params.lower_bound = 0;
 params.upper_bound = 50;
 params.nK = size(params.theta_start,1);
 
-params.IV_type = 'Houde';
-% Dataset.X = [ones(params.nb_cars,1) prod_char];
-
-Dataset.X = [ones(params.nb_cars,1) prod_char dummy_firm(:,2:end)];
-Dataset = create_iv(Dataset, params);
-
 % Draw income from lognormal
 mu = log((params.income_mean^2)/sqrt(params.income_sd^2+params.income_mean^2));
 sigma = sqrt(log(params.income_sd^2/(params.income_mean^2)+1));
@@ -124,7 +118,7 @@ sigma = sqrt(log(params.income_sd^2/(params.income_mean^2)+1));
 Draws.income = lognrnd(mu,sigma,1,params.nb_draws);
 
 %
-Dataset.Xd = [Dataset.X -Dataset.Pz*Dataset.data.price];
+Dataset.Xd = [Dataset.X -Dataset.data.price];
 
 [est, Dataset] = blp_model(Dataset, params, Draws);
 result.blp = est;

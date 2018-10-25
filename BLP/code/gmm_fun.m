@@ -3,7 +3,7 @@ function [objective_val, est] = gmm_fun(theta, Dataset, params, Draws)
 %   Detailed explanation goes here
 
 IV = Dataset.IV;
-Xd = Dataset.Xd;
+Xd = Dataset.Pz*Dataset.Xd;
 W = Dataset.W;
 
 mean_utility = get_mean_utility(Dataset, params, Draws, theta);

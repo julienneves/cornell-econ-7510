@@ -22,7 +22,7 @@ switch specification
     case 'demand'
         % OLS of mean_utility
         
-        Xd = Dataset.Xd;
+        Xd = Dataset.Pz*Dataset.Xd;
         [beta,ci,xi,~,stats] = regress(mean_utility,Xd);
         
         [b, e] = get_markup(Dataset, params);
@@ -36,8 +36,8 @@ switch specification
         result.demand.stats = stats;
         
     otherwise
-        Xd = Dataset.Xd ;
-        Xs = Dataset.Xs ;
+        Xd = Dataset.Pz*Dataset.Xd;
+        Xs = Dataset.Pz*Dataset.Xs;
         
         [beta,ci_d,xi,~,stats_d] = regress(mean_utility,Xd);
         

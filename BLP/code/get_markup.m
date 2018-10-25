@@ -47,20 +47,20 @@ switch model
         mean_utility = Dataset.mean_utility;
         alpha = result.alpha;
         yi = Draws.income;
+        nb_draws = size(yi,2);
         
         Numerator = exp(mean_utility - alpha(2)*price./yi);
         ind_prob = bsxfun(@rdivide, Numerator, 1+sum(Numerator,1));
         delta = zeros(size(ind_prob,1));
         e = zeros(size(ind_prob,1));
         
-        for i = 1:size(yi,2)
+        for i = 1:nb_draws
             temp = ind_prob(:,i);
             D = (alpha(1)+alpha(2)/yi(:,i))*(temp.*temp'-diag(temp));
-            e  = e + D.*(price'./temp);
-            delta = delta + D;
+            
+            delta = delta + D/nb_draws;
+            e  = e + D.*(price'/temp)/nb_draws;
         end
-        e = e/size(yi,2);
-        delta = delta/size(yi,2);
 end
 
 switch specification
