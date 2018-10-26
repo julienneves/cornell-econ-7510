@@ -107,7 +107,7 @@ has utility for product $j$ as a function of price and product quality, $\delta_
 \[
 u_{ij} =\delta_j -\alpha_i p_j
 \]
-The distribution of consumer price sensitivity, $\alpha_i$, is exponential with parameter $\lambda = 4\cdot 10^{-6}$. We further assume that $\delta_j = x_j\beta +\xi_j$ and that $x_j$ is uncorrelated with $xi_j$.
+The distribution of consumer price sensitivity, $\alpha_i$, is exponential with parameter $\lambda = 4\cdot 10^{-6}$. We further assume that $\delta_j = x_j\beta +\xi_j$ and that $x_j$ is uncorrelated with $\xi_j$.
 
 In this model, $i$ choose the $j$ that provides the highest utility. This implies that if $p_j>p_k$, we need $\delta_j>\delta_k$ otherwise no one would ever pick $j$. In the same vein, it is straightforward to see that the share of good $j$ will depend only on its close neighbors in the price dimension. Hence, before deriving the result, we sort the data from lowest to highest price.
 
@@ -226,9 +226,10 @@ From the previous question, it is easy to to compute $\Delta$ and therefore $mc_
 
 With this in mind we can revert back to $mc_j = x_j\gamma +\eta q_j +\omega_j$ and estimate it like we would for $\delta_j = x_j\beta +\xi_j$. The only issue we are facing now is	the potential endogeneity of $q_j$.
 
-To remedy the situation, we need to find an instrument for $q_j$. There is plenty potential instruments, but after playing around for a while, I decide to follow Gandhi and Houde (2018) and use $\sum_k |x_j-x_k|$ and $\sum_k (x_j - x_k)^2$. To avoid any problem with collinearity and matrix inversion, I use the function \verb!licols()! to reduce our set of instruments $Z = [x_j \sum_k (x_j - x_k)^2]$ to a full column rank matrix.
+To remedy the situation, we need to find an instrument for $q_j$. There is plenty potential instruments, but after playing around for a while, I decide to follow Gandhi and Houde (2018) and use $\sum_k |x_j-x_k|$ and $\sum_k (x_j - x_k)^2$. To avoid any problem with collinearity and matrix inversion, I use the function \verb!licols()! to reduce our set of instruments $Z = [x_j,\sum_k |x_j - x_k|, \sum_k (x_j - x_k)^2]$ to a full column rank matrix.
 
-The result from our IV regression, using the different pricing strategy, are given in Table \ref{tab:vertical_supply}.
+The result from our IV regression, using the different pricing strategy, are given in Table \ref{tab:tab:vertical_supply}.
+
 
 \begin{table}[H]\centering
 \caption{Vertical model - supply side}
@@ -279,7 +280,46 @@ $[\quad] $ 95\% confidence interval
  %% Need to talk about results and change theorem
  %%%%%%%%%%%%
 \section*{Part 4}
+%%%%%%%%%%%
+ %% Need to talk about how to test which supply
+ %%%%%%%%%%%%
+
 \section*{Part 5}
+
+We now assume that each consumer $i$ has utility for product $j$ as a function of price and product quality, $\delta_j$ of:
+\[
+u_{ij} =\delta_j +\epsilon_{ij}
+\]
+where $\delta_j = x_j\beta -\alpha p_j+\xi_j$, $\xi_j$ is the unosbervable characteristics of good $j$ and $\epsilon_{ij}$ follows a type I extreme value distribution.
+
+As shown in class, we have that the share of good $j$ is given by
+\[
+s_j = \frac{e^{\delta_j }}{1+\sum_k e^{\delta_k}}
+\]
+or, equivalently,
+\[
+\ln(s_j)-\ln(s_0) = x_j\beta -\alpha p_j+\xi_j
+\]
+
+Armed with this regression, we can now estimate $[\beta, \alpha]$. Like with the supply side, we now have some endogeneity problem. To solve this, we use the same set of instruments, $Z = [x_j,\sum_k |x_j - x_k|, \sum_k (x_j - x_k)^2]$, and run an IV regression to get back both $[\beta, \alpha]$ and $\xi$. The result from our IV regression are reported in Table \ref{tab:logit}.
+
+Moreover, Table  \ref{tab:logit} includes the estimation of demand and supply parameters assuming Nash-Bertrand equilibrium with multiproduct firms. Recall that with multiproduct firms, Nash-Bertrand equilibrium yields
+\[
+p = mc + \Delta\inv s  = \Delta\inv s + x\gamma +\eta q +\omega
+\]
+where $\Delta_{jk} = \left\{\mat{\frac{\partial s_j}{\partial p_k} & \text{if }k\in \text{firm}(j)\\ 0 & \text{otherwise}}\right.$ and $s$ is the vector of shares. We can solve explicitly for $\Delta$ by noting that $\frac{\partial s_j}{\partial p_k}= \left\{\mat{ -\alpha s_j(1-s_j) & \text{if } j= k\\ \alpha s_js_k & \text{otherwise}}\right.$. Let $\Delta\inv s = b(\alpha)$ since, unlike the vertical model, it depends on $\alpha$ in a non-linear fashion.
+
+We can now define our moments equations:
+\begin{align*}
+	\Ex{\mat{Z\xi_j \\ Z\omega_j}} = 0
+\end{align*}
+or, equivalently
+\begin{align*}
+	\Ex{\mat{Z(\delta_j - x_j\beta +\alpha p_j) \\ Z(p_j-b_j(\alpha)-x_j\gamma -\eta q_j)}} = 0
+\end{align*}
+where $Z$ is the set of instruments. Using these statcked moments conditions, we can use our usual GMM technique to estimate $\theta = [\alpha, \beta, \gamma, \eta]$. Since $\alpha$ enters non-linearly, to solve for it I use \verb!fmincon()! to minize the objective function with respect to $\alpha$ and then solve for the rest of parameters using least squares techniques.
+
+The only issue that I'm facing now is how to compute the standard errors of our estimate. Since, $\alpha$ enters non-linearly, I need to find the gradient of $s_j$ with $\theta$ to be able to compute the GMM covariance matrix. Sadly, I ran out of time. Estimation results are reported in Table \ref{tab:logit}.
 
 \begin{table}[H]\centering
 \caption{Vertical model - supply side}
@@ -289,15 +329,15 @@ $[\quad] $ 95\% confidence interval
  & \textbf{Marginal cost} & \textbf{Multiple product firms} \\
 \midrule
 (Intercept)         &     \num{7.5865 e+7}  &     \num{7.5865 e+7}  \\
-    &      [\num{3.9391 e+7}  \num{1.1234 e+8}]       &      [\num{3.9391 e+7}  \num{1.1234 e+8}]        \\
+    &      [\num{3.9391 e+7}  \num{1.1234 e+8}]       &             \\
 Weight         &     \num{4.1722 e+4}    &     \num{4.1722 e+4}     \\
-  &      [\num{2.5642 e+4}  \num{5.7802 e+4}] &      [\num{2.5642 e+4}  \num{5.7802 e+4}]       \\
+  &      [\num{2.5642 e+4}  \num{5.7802 e+4}] &           \\
 Horsepower         &     \num{3.1989 e+5}  &     \num{3.1989 e+5} \\
-      &      [\num{1.2081 e+5}  \num{5.1897 e+5}]  &      [\num{1.2081 e+5}  \num{5.1897 e+5}]   \\
+      &      [\num{1.2081 e+5}  \num{5.1897 e+5}]  &      \\
 AC         &     \num{1.1753 e+7}    &     \num{1.1753 e+7}  \\
-	     &      [\num{-4.3171 e+6}  \num{2.7823 e+7}]   &      [\num{-4.3171 e+6}  \num{2.7823 e+7}]      \\
+	     &      [\num{-4.3171 e+6}  \num{2.7823 e+7}]   &         \\
 Price ($\alpha$)         &     \num{1.1753 e+7}    &     \num{1.1753 e+7}  \\
-			 	     &      [\num{-4.3171 e+6}  \num{2.7823 e+7}]   &      [\num{-4.3171 e+6}  \num{2.7823 e+7}]      \\
+			 	     &      [\num{-4.3171 e+6}  \num{2.7823 e+7}]   &           \\
 FE       &      Yes & Yes \\
             &     \\
 \midrule
@@ -305,15 +345,15 @@ FE       &      Yes & Yes \\
 R$^{2}$           &       0.8175   \\
 	\midrule
 	(Intercept)         &       &     \num{7.5865 e+7} \\
- &            &      [\num{3.9391 e+7}  \num{1.1234 e+8}]       \\
+ &            &           \\
 		Weight         &       &     \num{4.1722 e+4}     \\
- &      &      [\num{2.5642 e+4}  \num{5.7802 e+4}]     \\
+ &      &       \\
 Horsepower         &       &     \num{3.1989 e+5} \\
-	      &       &      [\num{1.2081 e+5}  \num{5.1897 e+5}]  \\
+	      &       &       \\
 	AC         &        &     \num{1.1753 e+7} \\
-		     &         &      [\num{-4.3171 e+6}  \num{2.7823 e+7}]    \\
+		     &         &        \\
 Quantity         &      &     \num{7.5865 e+7}  \\
- &             &      [\num{3.9391 e+7}  \num{1.1234 e+8}]       \\
+ &             &          \\
 
 	FE       &   & Yes  \\
 						            &     \\
@@ -327,6 +367,8 @@ $[\quad] $ 95\% confidence interval
 }
  \label{tab:logit}
 \end{table}
+
+Again, we report the elasticities for a subset of the product in Table \ref{tab:logit_elasticities}.
 
 \begin{table}[H]
 	\centering
@@ -352,6 +394,10 @@ Car$\backslash$Car & 15      & 16      & 17                                & 18 
 }
  \label{tab:logit_elasticities}
 \end{table}
+
+Looking at these elasticities, we have an improvment compared to the previous vertical model where most elasticities where equal to 0.
+
+
 \section*{Part 6}
 \section*{Part 7}
 \section*{Part 8}
@@ -403,7 +449,7 @@ $[\quad] $ 95\% confidence interval
 	\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lllllllllll}
 	\toprule
-Car$\backslash$Car & 15      & 16      & 17                                & 18      & 19      &
+Car$\backslash$Price & 15      & 16      & 17                                & 18      & 19      &
 20      & 21      & 22      & 23      & 24      \\
 \midrule
 15                     & -0.0948 & 0.0003  & 0                                 & 0       & 0       & 0       & 0       & 0       & 0       & 0       \\

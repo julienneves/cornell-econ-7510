@@ -1,4 +1,4 @@
-function [b, e,delta] = get_markup(Dataset, params, result, Draws)
+function [b, e, delta] = get_markup(Dataset, params, result, Draws)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -52,15 +52,15 @@ switch model
         Numerator = exp(mean_utility - alpha(2)*price./yi);
         ind_prob = bsxfun(@rdivide, Numerator, 1+sum(Numerator,1));
         delta = zeros(size(ind_prob,1));
-        e = zeros(size(ind_prob,1));
         
         for i = 1:nb_draws
             temp = ind_prob(:,i);
             D = (alpha(1)+alpha(2)/yi(:,i))*(temp.*temp'-diag(temp));
             
-            delta = delta + D/nb_draws;
+            delta = delta + D;
         end
-        e = delta*(price'./shares);
+        delta = delta/nb_draws;
+        e = delta.*(price'./shares);
 end
 
 switch specification

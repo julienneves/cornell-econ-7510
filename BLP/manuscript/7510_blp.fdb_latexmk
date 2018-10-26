@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1540520076 "7510_blp.tex" "7510_blp.pdf" "7510_blp" 1540520078
+["pdflatex"] 1540566137 "7510_blp.tex" "7510_blp.pdf" "7510_blp" 1540566141
   "../output/alpha2.jpg" 1540519412 15228 55e2ae73dfe8da445a6745ffc01ee851 ""
   "/home/julien/.miktex/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt" 1539830926 748949 142876e6fa9ffba5e7d40612b1530501 ""
   "/home/julien/.miktex/texmfs/data/pdftex/config/pdftex.map" 1540506906 83721 56dfc66f96b4bc7777806d83f0266370 ""
@@ -161,9 +161,9 @@
   "/usr/local/share/miktex-texmf/tex/latex/tools/array.sty" 1525888914 13555 1c149904152e53130811b31763000c97 ""
   "/usr/local/share/miktex-texmf/tex/latex/tools/enumerate.sty" 1525888914 3465 3f63ff30365d38132fb55859c9cabd4d ""
   "/usr/local/share/miktex-texmf/tex/latex/tools/verbatim.sty" 1525888914 7262 cf84171354dfa1855684c0946ff000f1 ""
-  "7510_blp.aux" 1540520078 1128 77e7cc5e7ee9dc5d7c448db86044416c ""
-  "7510_blp.tex" 1540520076 22508 faf37c1bfb311b1b6b6c3b9ecbbf1dcd ""
+  "7510_blp.aux" 1540566140 1128 6599258b8f98f70415c321c36275e76e ""
+  "7510_blp.tex" 1540566134 25099 20a15f1355449f63cd42c06157a8e6ea ""
   (generated)
-  "7510_blp.log"
   "7510_blp.pdf"
   "7510_blp.aux"
+  "7510_blp.log"

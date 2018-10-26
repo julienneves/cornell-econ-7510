@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840) (preloaded format=pdflatex 2018.10.17)  25 OCT 2018 22:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840) (preloaded format=pdflatex 2018.10.17)  26 OCT 2018 11:02
 entering extended mode
 **./7510_blp.tex
 (7510_blp.tex
@@ -954,39 +954,46 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 202.
- [3] [4] [5]
-<../output/alpha2.jpg, id=34, 562.1pt x 421.575pt>
+
+
+LaTeX Warning: Reference `tab:tab:vertical_supply' on page 3 undefined on input
+ line 231.
+
+[3] [4] [5] [6] [7]
+<../output/alpha2.jpg, id=41, 562.1pt x 421.575pt>
 File: ../output/alpha2.jpg Graphic file (type jpg)
 <use ../output/alpha2.jpg>
-Package pdftex.def Info: ../output/alpha2.jpg  used on input line 395.
+Package pdftex.def Info: ../output/alpha2.jpg  used on input line 441.
 (pdftex.def)             Requested size: 328.82707pt x 246.61716pt.
- [6]
-[7 <../output/alpha2.jpg>] (7510_blp.aux) ) 
+ [8] [9 <../output/alpha2.jpg>] (7510_blp.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 25997 strings out of 494889
- 521018 string characters out of 3178926
+ 25998 strings out of 494889
+ 521043 string characters out of 3178926
  724782 words of memory out of 3000000
- 29290 multiletter control sequences out of 15000+200000
+ 29291 multiletter control sequences out of 15000+200000
  543930 words of font info for 70 fonts, out of 3000000 for 9000
  0 hyphenation exceptions out of 8191
- 55i,13n,63p,465b,508s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/share/miktex-texmf/fonts
-/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/share/miktex-texmf/fonts/type1
-/public/amsfonts/cm/cmex10.pfb></usr/local/share/miktex-texmf/fonts/type1/publi
-c/amsfonts/cm/cmmi12.pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsf
-onts/cm/cmmi6.pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm
-/cmmi8.pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmr12.
-pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmr17.pfb></u
-sr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local
-/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/share/m
-iktex-texmf/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/share/miktex-
-texmf/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/share/miktex-texmf/f
-onts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/share/miktex-texmf/fonts/ty
-pe1/public/amsfonts/cm/cmtt12.pfb></usr/local/share/miktex-texmf/fonts/type1/pu
-blic/amsfonts/symbols/msbm10.pfb>
-Output written on 7510_blp.pdf (7 pages, 169355 bytes).
+ 55i,13n,63p,491b,508s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
+r/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/loca
+l/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/shar
+e/miktex-texmf/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/share/mikte
+x-texmf/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/share/miktex-texmf
+/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/share/miktex-texmf/fonts/
+type1/public/amsfonts/cm/cmr17.pfb></usr/local/share/miktex-texmf/fonts/type1/p
+ublic/amsfonts/cm/cmr6.pfb></usr/local/share/miktex-texmf/fonts/type1/public/am
+sfonts/cm/cmr8.pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/c
+m/cmsy10.pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmsy
+6.pfb></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmsy8.pfb><
+/usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/l
+ocal/share/miktex-texmf/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on 7510_blp.pdf (9 pages, 176023 bytes).
 PDF statistics:
- 86 PDF objects out of 1000 (max. 8388607)
+ 92 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

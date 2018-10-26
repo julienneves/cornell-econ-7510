@@ -135,4 +135,4 @@ end
 hist(B(:,1))
 hist(B(:,2))
 
-
+save output/result.mat
