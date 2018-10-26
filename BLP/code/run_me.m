@@ -92,6 +92,12 @@ result.logit= est;
 
 % Multiple
 
+params.nb_init = 20;
+params.theta_start = 1;
+params.lower_bound = 0;
+params.upper_bound = 50;
+params.nK = size(params.theta_start,1);
+
 params.specification = 'multiple';
 Dataset.Xd = [Dataset.X];
 Dataset.Xs = [Dataset.X Dataset.data.quantity];
@@ -105,8 +111,8 @@ params.nb_draws = 1000;
 params.income_mean = 35000;
 params.income_sd = 45000;
 
-params.nb_init = 20;
-params.theta_start = 1;
+params.nb_init = 100;
+params.theta_start = 22;
 params.lower_bound = 0;
 params.upper_bound = 50;
 params.nK = size(params.theta_start,1);

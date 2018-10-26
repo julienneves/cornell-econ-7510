@@ -59,8 +59,8 @@ switch model
             D = (alpha(1)+alpha(2)/yi(:,i))*(temp.*temp'-diag(temp));
             
             delta = delta + D/nb_draws;
-            e  = e + D.*(price'/temp)/nb_draws;
         end
+        e = delta*(price'./shares);
 end
 
 switch specification
