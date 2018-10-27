@@ -4,11 +4,13 @@ function [objective_val, result] = gmm_logit(theta, Dataset, params)
 
 alpha = theta;
 result.demand.alpha = alpha;
-
 Xd = Dataset.Pz*Dataset.Xd ;
 Xs = Dataset.Pz*Dataset.Xs ;
 
-
+hessian = params.hessian;
+tval = tinv(.95,(size(Xd,1)-size(Xd,2)));
+se = sqrt(diag(inv(hessian)));
+ci_theta = [theta-se*tval theta+se*tval];
 
 mean_utility = get_mean_utility(Dataset, params);
 
@@ -17,8 +19,8 @@ Yd = mean_utility + alpha*Dataset.data.price;
 [beta,ci_d,xi,~,stats_d] = regress(Yd,Xd);
 
 result.demand.xi = xi;
-result.demand.beta = beta;
-result.demand.ci = ci_d;
+result.demand.beta = [beta; alpha];
+result.demand.ci = [ci_d; ci_theta];
 result.demand.stats = stats_d;
 
 [b, e] = get_markup(Dataset, params, result);

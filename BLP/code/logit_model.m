@@ -56,13 +56,13 @@ switch specification
         
         %%%%%%% Find estimates using different initial values
         theta_mat = zeros(nb_init, nK);
-        
         for i=1:params.nb_init
             % Estimation
-            theta_mat(i) = fmincon('gmm_logit', theta_init(i), [], [], [], [], ...
+            [theta_mat(i),~,~,~,~,~,hessian]  = fmincon('gmm_logit', theta_init(i), [], [], [], [], ...
                 lower_bound, upper_bound, [], options, ...
                 Dataset, params);
             
+            params.hessian = hessian;
             [fval, est] = gmm_logit(theta_mat(i), Dataset, params);
             result{i}= est;
             result{i}.start = theta_init(i);

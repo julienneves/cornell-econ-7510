@@ -20,7 +20,8 @@ params.mean_utility_tol = 1e-12;
 params.max_ite = 5000;
 params.M = 100000000;
 params.nb_cars = size(Dataset.data.price,1);
-params.IV_type = 'Houde';
+params.IV_type = 'BLP';
+params.hessian = 1;  
 
 
 % Sort by price
@@ -32,7 +33,7 @@ Dataset.shares = Dataset.data.quantity/params.M;
 % 
 dummy_firm = dummyvar(Dataset.data.firm);
 prod_char = [Dataset.data.weight Dataset.data.hp Dataset.data.AC];
-Dataset.X = [ones(params.nb_cars,1) prod_char dummy_firm(:,2:end)];
+Dataset.X = [ones(params.nb_cars,1) Dataset.data.hp./Dataset.data.weight Dataset.data.AC dummy_firm(:,2:end)];
 Dataset = create_iv(Dataset, params);
 
 %% Vertical Model (Question 1)
@@ -132,7 +133,7 @@ result.blp = est;
 for i = 1:params.nb_init
     B(i,:)=est{i}.alpha; 
 end
-hist(B(:,1))
 hist(B(:,2))
+saveas(gcf, 'output/alpha2.png')
 
 save output/result.mat
